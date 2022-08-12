@@ -18,15 +18,17 @@ public interface CameraApi {
     List<Camera> getListOfAvailableCameras();
 
     @GetMapping(value = "{path}")
-    CameraSourceData getCameraSourceDataByUrl(@PathVariable(value = "path") String path
-            , @RequestParam(name = "mocky-delay", required = false) String requestParam);
+    CameraSourceData getCameraSourceDataByUrl(
+            @PathVariable(value = "path") String path,
+            @RequestParam(name = "mocky-delay", required = false) String requestParam);
 
     @GetMapping(value = "{path}")
     CameraSourceData getCameraSourceDataByUrl(@PathVariable(value = "path") String path);
 
     @GetMapping(value = "{path}")
-    CameraTokenData getCameraTokenDataByUrl(@PathVariable(value = "path") String path
-            , @RequestParam(name = "mocky-delay", required = false) String requestParam);
+    CameraTokenData getCameraTokenDataByUrl(
+            @PathVariable(value = "path") String path,
+            @RequestParam(name = "mocky-delay", required = false) String requestParam);
 
     @GetMapping(value = "{path}")
     CameraTokenData getCameraTokenDataByUrl(@PathVariable(value = "path") String path);
