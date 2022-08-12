@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AsyncCameraApiImpl implements AsyncCameraApi {
-    private final String regexFirst = "http://www.mocky.io/v2/";
+    private final String CORE_URI = "http://www.mocky.io/v2/";
 
     private final CameraApi cameraApi;
 
@@ -25,7 +25,7 @@ public class AsyncCameraApiImpl implements AsyncCameraApi {
     public CompletableFuture<CameraSourceData> getCameraSourceData(String sourceDataUrl) {
         log.info("Thread= {}, joined method \"getCameraSourceData\"", Thread.currentThread().getName());
         String path = getPath(sourceDataUrl);
-        String requestParam = getRequestParamSubStringIfExists(sourceDataUrl);
+        String requestParam = getRequestParam(sourceDataUrl);
 
         if (sourceDataUrl.contains("=")) {
             return CompletableFuture.completedFuture(cameraApi.getCameraSourceDataByUrl(path, requestParam));
@@ -38,7 +38,7 @@ public class AsyncCameraApiImpl implements AsyncCameraApi {
     public CompletableFuture<CameraTokenData> getCameraTokenData(String tokenDataUrl) {
         log.info("Thread= {}, joined method \"getCameraTokenData\"", Thread.currentThread().getName());
         String path = getPath(tokenDataUrl);
-        String requestParam = getRequestParamSubStringIfExists(tokenDataUrl);
+        String requestParam = getRequestParam(tokenDataUrl);
 
         if (tokenDataUrl.contains("=")) {
             return CompletableFuture.completedFuture(cameraApi.getCameraTokenDataByUrl(path, requestParam));
@@ -46,7 +46,7 @@ public class AsyncCameraApiImpl implements AsyncCameraApi {
         return CompletableFuture.completedFuture(cameraApi.getCameraTokenDataByUrl(path));
     }
 
-    private synchronized String getRequestParamSubStringIfExists(String url) {
+    private synchronized String getRequestParam(String url) {
         if (url.contains("=")) {
             return url.substring(url.indexOf("=") + 1);
         }
@@ -56,7 +56,7 @@ public class AsyncCameraApiImpl implements AsyncCameraApi {
     private String getPath(String sourceUrl) {
         StringBuffer stringBuffer = new StringBuffer();
 
-        AtomicInteger current = new AtomicInteger(regexFirst.length());
+        AtomicInteger current = new AtomicInteger(CORE_URI.length());
         for (current.get(); current.get() < sourceUrl.length(); current.getAndIncrement()) {
             if (sourceUrl.charAt(current.get()) == '?') {
                 break;
